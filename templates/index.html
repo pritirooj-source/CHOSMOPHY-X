@@ -456,12 +456,13 @@
             width: 100%;
         }
 
-        /* Perfectly contained table wrapper */
+        /* Dedicated table wrapper with independent horizontal scrolling */
         .table-wrap {
             max-height: 280px;
             width: 100%;
             overflow-x: auto;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -483,6 +484,7 @@
 
         table {
             width: 100%;
+            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears on phones */
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -520,12 +522,12 @@
             height: auto;
         }
 
-        .col-focus { width: 28%; }
-        .col-base { width: 12%; text-align: center; }
-        .col-sol { width: 32%; }
-        .col-org { width: 16%; }
-        .col-dg { width: 6%; text-align: center; }
-        .col-mit { width: 6%; text-align: center; }
+        .col-focus { width: 160px; }
+        .col-base { width: 80px; text-align: center; }
+        .col-sol { width: 190px; }
+        .col-org { width: 130px; }
+        .col-dg { width: 90px; text-align: center; }
+        .col-mit { width: 80px; text-align: center; }
 
         tr:hover td { background: rgba(123, 79, 133, 0.06); }
 
@@ -744,7 +746,7 @@
                     </div>
 
                     <div class="panel" style="margin-bottom: 0;">
-                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Scroll list for all organs • Click row for Deep-Dive)</span></h2>
+                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Swipe table left/right • Click row for Deep-Dive)</span></h2>
                         <div class="table-wrap">
                             <table>
                                 <thead>
