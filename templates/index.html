@@ -34,7 +34,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            
+           
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -242,8 +242,8 @@
             gap: 8px;
         }
 
-        .form-group { 
-            margin-bottom: 8px; 
+        .form-group {
+            margin-bottom: 8px;
             position: relative;
         }
 
@@ -518,15 +518,15 @@
             display: inline-block;
         }
 
-        .risk-high { 
-            background: rgba(179, 57, 57, 0.15); 
-            color: #8b0000; 
+        .risk-high {
+            background: rgba(179, 57, 57, 0.15);
+            color: #8b0000;
             border: none;
         }
-        
-        .risk-mitigated { 
-            background: rgba(33, 140, 116, 0.15); 
-            color: #0b5345; 
+       
+        .risk-mitigated {
+            background: rgba(33, 140, 116, 0.15);
+            color: #0b5345;
             border: none;
         }
 
@@ -587,7 +587,7 @@
     <div class="page-container">
         <!-- Top Banner with the Uploaded Image -->
         <div class="hero-banner">
-            <img src="{{ url_for('static', filename='COSMOPHY-X_Main_Pic_2.jpeg') }}" alt="CosmoPhy-X Mission Illustration" class="hero-img" onerror="this.onerror=null; this.src='/static/COSMOPHY-X_Main_Pic_2.JPG';">
+            <img src="{{ url_for('static', filename='COSMOPHY-X_Main_Pic_2.jpg') }}" alt="CosmoPhy-X Mission Illustration" class="hero-img" onerror="this.onerror=null; this.src='/static/COSMOPHY-X_Main_Pic_2.JPG';">
         </div>
 
         <div id="hudViewport">
@@ -631,7 +631,7 @@
                 <div class="panel control-panel">
                     <div>
                         <h2 class="panel-title">Orbital Parameters &amp; Biosense Matrix</h2>
-                        
+                       
                         <div class="form-group">
                             <label>Target Destination Vector (Solar System)</label>
                             <div class="custom-select-box" id="selectBox">
@@ -912,11 +912,11 @@
                     body: JSON.stringify({ study_id: cleanId })
                 });
                 const data = await res.json();
-                
+               
                 if (res.ok) {
                     status.style.color = 'var(--success)';
                     status.innerHTML = `✓ <strong>${data.record.id}</strong> Ingested<br><span style="color:var(--accent-secondary);">[${data.mode}]</span>`;
-                    
+                   
                     if (!activeClientRecords.some(r => r.id === data.record.id)) {
                         activeClientRecords.push(data.record);
                         localStorage.setItem('cosmophyx_records', JSON.stringify(activeClientRecords));
@@ -972,7 +972,7 @@
             });
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
-            
+           
             const dateStr = new Date().toISOString().slice(0,10).replace(/-/g, "");
             const filename = `CosmoPhy_X_${currentDestination}_${days}d_${dateStr}.pdf`;
 
@@ -994,11 +994,11 @@
                 return formatted;
             });
             const baselineValues = Object.values(risks);
-            
+           
             const riskKeyOrder = Object.keys(risks);
             const mitigatedValues = riskKeyOrder.map(key => {
-                const rec = recommendations.find(r => 
-                    r.pathology.toLowerCase().includes(key.toLowerCase()) || 
+                const rec = recommendations.find(r =>
+                    r.pathology.toLowerCase().includes(key.toLowerCase()) ||
                     key.toLowerCase().includes(r.pathology.toLowerCase().split(' ')[0])
                 );
                 return rec ? rec.mitigated_risk : Math.round(risks[key] * 0.25);
@@ -1032,7 +1032,7 @@
                     layout: { padding: { left: 5, bottom: 12 } },
                     scales: {
                         y: {
-                            beginAtZero: true, 
+                            beginAtZero: true,
                             max: 100,
                             title: {
                                 display: true,
@@ -1041,8 +1041,8 @@
                                 font: { size: 8, family: "'Calisto MT', serif", weight: '600' }
                             },
                             grid: { color: 'rgba(123, 79, 133, 0.15)', borderDash: [3, 3] },
-                            ticks: { 
-                                color: '#36283b', 
+                            ticks: {
+                                color: '#36283b',
                                 font: { size: 7.5, family: "'Calisto MT', serif", weight: '600' }
                             }
                         },
@@ -1054,8 +1054,8 @@
                                 font: { size: 9, family: "'Calisto MT', serif", weight: '600' }
                             },
                             grid: { display: false },
-                            ticks: { 
-                                color: '#36283b', 
+                            ticks: {
+                                color: '#36283b',
                                 font: { size: 7.5, family: "'Calisto MT', serif", weight: '600' },
                                 maxRotation: 55,
                                 minRotation: 45,
@@ -1063,7 +1063,7 @@
                             }
                         }
                     },
-                    plugins: { 
+                    plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
@@ -1118,7 +1118,7 @@
                     layout: { padding: { left: 5, bottom: 12 } },
                     scales: {
                         y: {
-                            beginAtZero: true, 
+                            beginAtZero: true,
                             max: 100,
                             title: {
                                 display: true,
@@ -1127,8 +1127,8 @@
                                 font: { size: 8, family: "'Calisto MT', serif", weight: '600' }
                             },
                             grid: { color: 'rgba(123, 79, 133, 0.15)', borderDash: [3, 3] },
-                            ticks: { 
-                                color: '#36283b', 
+                            ticks: {
+                                color: '#36283b',
                                 font: { size: 7.5, family: "'Calisto MT', serif", weight: '600' }
                             }
                         },
@@ -1140,8 +1140,8 @@
                                 font: { size: 9, family: "'Calisto MT', serif", weight: '600' }
                             },
                             grid: { display: false },
-                            ticks: { 
-                                color: '#36283b', 
+                            ticks: {
+                                color: '#36283b',
                                 font: { size: 7.5, family: "'Calisto MT', serif", weight: '600' },
                                 maxRotation: 55,
                                 minRotation: 45,
@@ -1149,12 +1149,12 @@
                             }
                         }
                     },
-                    plugins: { 
-                        legend: { 
-                            display: true, 
+                    plugins: {
+                        legend: {
+                            display: true,
                             position: 'top',
                             labels: { color: '#36283b', boxWidth: 10, font: { size: 9.5, family: "'Calisto MT', serif", weight: '600' } }
-                        } 
+                        }
                     }
                 }
             });
@@ -1174,7 +1174,7 @@
                     <td class="col-dg" style="font-weight: 400; color: var(--text-main);">${cm.delta_g_kcal} kcal/mol</td>
                     <td class="col-mit"><span class="badge-risk risk-mitigated">${cm.mitigated_risk}%</span></td>
                 `;
-                
+               
                 row.addEventListener('click', () => {
                     playSound('popup');
                     document.getElementById('modalTitle').innerText = `Organ Deep-Dive: ${cm.pathology}`;
