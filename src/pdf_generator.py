@@ -6,6 +6,7 @@ Includes End-to-End Biosynthetic & Nano-Medicine Delivery Protocol.
 
 import datetime
 from io import BytesIO
+from flask import request, send_file
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -33,7 +34,7 @@ def draw_beige_background(canvas, doc):
     canvas.rect(16, 16, doc.pagesize[0] - 32, doc.pagesize[1] - 32, stroke=1, fill=0)
     canvas.restoreState()
 
-def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
+def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures, exact_date_str):
     buffer = BytesIO()
    
     doc = SimpleDocTemplate(
@@ -47,10 +48,6 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
 
     story = []
     styles = getSampleStyleSheet()
-
-    # Fixed and precise timestamp generation
-    now = datetime.datetime.now()
-    exact_date_str = now.strftime("%d %b %Y | %H:%M:%S")
 
     total_rows = len(countermeasures)
 
@@ -231,3 +228,26 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
     doc.build(story, onFirstPage=draw_beige_background)
     buffer.seek(0)
     return buffer.getvalue()
+
+
+# Flask Route to Handle PDF Export with Client Local Time Support
+# @app.route('/api/export-pdf', methods=['POST'])
+def export_pdf():
+    data = request.get_json()
+    destination = data.get('destination', 'LEO_ISS')
+    duration = data.get('duration', 180)
+    
+    # Receive browser/client time sent from frontend, fallback to server time if unavailable
+    client_time_str = data.get('current_time', datetime.datetime.now().strftime("%d %b %Y | %H:%M:%S"))
+    
+    dest_info = destinations.get(destination, {})
+    countermeasures = get_countermeasures(destination, duration) # Assumes this helper function exists in your app
+    
+    pdf_bytes = generate_mission_pdf(destination, duration, dest_info, countermeasures, client_time_str)
+    
+    return send_file(
+        BytesIO(pdf_bytes),
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=f"CosmoPhy_X_{destination}_{duration}d.pdf"
+    )
