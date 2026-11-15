@@ -441,7 +441,7 @@
             width: 100%;
         }
 
-        /* Updated table-wrap to enable both vertical and horizontal scrollbars */
+        /* Responsive Table Container with smooth horizontal & vertical scrolling */
         .table-wrap {
             max-height: 280px;
             overflow-x: auto;
@@ -467,7 +467,7 @@
 
         table {
             width: 100%;
-            min-width: 600px; /* Ensures horizontal scroll triggers cleanly on smaller screens / mobile */
+            min-width: 750px; /* Forces horizontal scroll on smaller mobile screens so columns never overlap */
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -505,12 +505,12 @@
             height: auto;
         }
 
-        .col-focus { width: 24%; }
-        .col-base { width: 10%; text-align: center; }
-        .col-sol { width: 28%; }
-        .col-org { width: 18%; }
-        .col-dg { width: 10%; text-align: center; }
-        .col-mit { width: 10%; text-align: center; }
+        .col-focus { width: 170px; }
+        .col-base { width: 80px; text-align: center; }
+        .col-sol { width: 200px; }
+        .col-org { width: 140px; }
+        .col-dg { width: 90px; text-align: center; }
+        .col-mit { width: 80px; text-align: center; }
 
         tr:hover td { background: rgba(123, 79, 133, 0.06); }
 
@@ -729,7 +729,7 @@
                     </div>
 
                     <div class="panel" style="margin-bottom: 0;">
-                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Scroll list for all organs • Click row for Deep-Dive)</span></h2>
+                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Scroll horizontally for full table • Click row for Deep-Dive)</span></h2>
                         <div class="table-wrap">
                             <table>
                                 <thead>
