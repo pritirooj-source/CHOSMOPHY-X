@@ -441,19 +441,23 @@
             width: 100%;
         }
 
+        /* Updated table-wrap to enable both vertical and horizontal scrollbars */
         .table-wrap {
             max-height: 280px;
+            overflow-x: auto;
             overflow-y: auto;
             scrollbar-width: thin;
-            scrollbar-color: rgba(123, 79, 133, 0.4) transparent;
+            scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
 
         .table-wrap::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
 
         .table-wrap::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(247, 244, 238, 0.4);
+            border-radius: 4px;
         }
 
         .table-wrap::-webkit-scrollbar-thumb {
@@ -463,7 +467,7 @@
 
         table {
             width: 100%;
-            table-layout: fixed;
+            min-width: 600px; /* Ensures horizontal scroll triggers cleanly on smaller screens / mobile */
             border-collapse: collapse;
             font-size: 12px;
         }
