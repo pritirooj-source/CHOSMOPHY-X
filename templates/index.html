@@ -142,6 +142,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .zoom-toolbar {
@@ -462,7 +463,7 @@
             width: 100%;
             overflow-x: auto;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -484,7 +485,7 @@
 
         table {
             width: 100%;
-            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears on phones */
+            min-width: 700px;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -596,14 +597,53 @@
             flex-shrink: 0;
         }
 
-        @media (max-width: 900px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .charts-row { grid-template-columns: 1fr; }
-            .right-area { grid-template-rows: auto auto; }
+        /* Custom Theme Matching Alert Box */
+        .custom-alert-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(54, 40, 59, 0.5);
+            backdrop-filter: blur(6px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-alert-backdrop.active { display: flex; }
+        .custom-alert-card {
+            background: #eae4de;
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 10px;
+            width: 420px;
+            max-width: 90vw;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(54, 40, 59, 0.3);
+            text-align: center;
+        }
+
+        /* Mobile Responsive Media Query */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .right-area {
+                grid-template-rows: auto auto;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Custom Theme Matching Alert Modal -->
+    <div class="custom-alert-backdrop" id="customAlertModal">
+        <div class="custom-alert-card">
+            <h3 id="customAlertTitle" style="margin: 0 0 10px 0; color: var(--accent-primary); font-size: 14px; text-transform: uppercase;">Notice</h3>
+            <p id="customAlertMessage" style="font-size: 12px; line-height: 1.5; color: var(--text-main); margin-bottom: 16px; white-space: pre-line;"></p>
+            <button type="button" onclick="closeCustomAlert(); playSound('click');" style="background: var(--accent-primary); color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 11px; cursor: pointer; font-weight: 600;">OK</button>
+        </div>
+    </div>
 
     <div class="page-container">
         <!-- Top Banner with the Uploaded Image -->
@@ -612,6 +652,7 @@
         </div>
 
         <div id="hudViewport">
+            <!-- Organ Deep-Dive Modal -->
             <div class="modal-backdrop" id="organModal">
                 <div class="modal-card">
                     <div class="modal-header">
@@ -630,12 +671,71 @@
                 </div>
             </div>
 
+            <!-- Dynamic Emergency AI Guidance Modal -->
+            <div class="modal-backdrop" id="emergencyModal">
+                <div class="modal-card" style="border-left: 4px solid var(--danger);">
+                    <div class="modal-header">
+                        <h3 style="margin:0; color: var(--danger); font-size: 14px; text-transform: uppercase; font-weight: 600;" id="emergencyModalTitle">🚨 Emergency AI Medical & First-Aid Protocol</h3>
+                        <button class="modal-close" onclick="closeEmergencyModal()">✕</button>
+                    </div>
+                    <div style="font-size: 12px; line-height: 1.6; color: var(--text-main); margin-top: 8px; font-weight: 400;">
+                        <p><strong>Dynamic Autonomous Guidance (Non-Doctor Protocol):</strong></p>
+                        <p id="dynamicEmergencyText" style="background: rgba(179,57,57,0.1); padding: 8px; border-radius: 6px; color: var(--danger); font-weight: 600; margin-top: 6px;">
+                            Vitals are nominal. Standing by for telemetry anomalies.
+                        </p>
+                        <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <button type="button" onclick="speakEmergencyGuide()" style="background: var(--accent-primary); color: #fff; border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer; font-weight: 600;">🔊 Read Aloud (Voice Guide)</button>
+                            <button type="button" onclick="stopEmergencyVoice()" style="background: var(--text-dim); color: #fff; border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer; font-weight: 600;">⏹ Stop Voice</button>
+                            <button type="button" onclick="openChatModal(); playSound('click');" style="background: var(--success); color: #fff; border: none; border-radius: 6px; padding: 7px 12px; font-size: 11px; cursor: pointer; font-weight: 600;">💬 Chat with AI Priti</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Live Chat Assistant Modal ("Priti") -->
+            <div class="modal-backdrop" id="chatModal">
+                <div class="modal-card" style="border-left: 4px solid var(--accent-primary); width: 600px;">
+                    <div class="modal-header">
+                        <h3 style="margin:0; color: var(--accent-primary); font-size: 14px; text-transform: uppercase; font-weight: 600;">💬 AstroMed Live AI Assistant: Priti</h3>
+                        <button class="modal-close" onclick="closeChatModal()">✕</button>
+                    </div>
+                    <div style="font-size: 12px; line-height: 1.5; color: var(--text-main); margin-top: 8px;">
+                        <p style="color: var(--text-dim); margin-bottom: 8px;"><em>"Hello Astronaut! I am Priti, your live onboard medical AI commander. Ask me any medical symptom or emergency protocol, and I will search and guide you."</em></p>
+                       
+                        <!-- Chat Box Window -->
+                        <div id="chatHistory" style="height: 300px; background: rgba(255,255,255,0.6); border: 1px solid var(--panel-border); border-radius: 6px; padding: 8px; overflow-y: auto; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px;">
+                            <div style="background: #e2dcd5; padding: 6px 10px; border-radius: 6px; align-self: flex-start; max-width: 85%;">
+                                <strong>Priti AI:</strong> Live neural core online. What health issue or symptom can I diagnose for you?
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Form -->
+                        <div style="display: flex; gap: 6px;">
+                            <input type="text" id="chatInput" placeholder="Ask Priti AI (e.g., severe headache, chest pain)..." style="flex: 1; padding: 6px 8px; font-size: 11px; background: var(--input-bg); border: none; border-radius: 6px; outline: none;" oninput="playSound('typing')" onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                            <button type="button" onclick="sendChatMessage()" style="background: var(--accent-primary); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; cursor: pointer; font-weight: 600;">SEND</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="header">
                 <div class="header-title-box">
                     <h1>CosmoPhy-X</h1>
-                    <div class="tagline">Cosmic Physiology & Extremophile Defense</div>
+                    <div class="tagline">Cosmic Physiology &amp; Extremophile Defense (Dual-Use: Space &amp; Rural Telehealth)</div>
                 </div>
                 <div class="header-right-actions">
+                    <!-- Rural & Public Patient Mode Toggle -->
+                    <button type="button" onclick="togglePublicMode(); playSound('click');" id="btnPublicMode" style="background: var(--accent-secondary); color: #fff; border: none; border-radius: 20px; padding: 5px 12px; font-size: 10.5px; cursor: pointer; font-weight: 600;">🧑‍⚕️ PUBLIC &amp; RURAL MODE</button>
+
+                    <!-- Earth-Based Telemedicine Mode Button -->
+                    <button type="button" onclick="toggleEarthMode(); playSound('click');" id="btnEarthMode" style="background: var(--success); color: #fff; border: none; border-radius: 20px; padding: 5px 12px; font-size: 10.5px; cursor: pointer; font-weight: 600;">🌍 EARTH TELEMEDICINE MODE</button>
+
+                    <!-- Emergency Button hidden initially, auto-pops up on danger -->
+                    <button type="button" id="btnEmergencyAlert" onclick="openEmergencyModal(); playSound('click');" style="background: var(--danger); color: #fff; border: none; border-radius: 20px; padding: 5px 12px; font-size: 10.5px; cursor: pointer; font-weight: 600; display: none;">🚨 EMERGENCY ALERT ACTIVE</button>
+                   
+                    <!-- Single Consolidated AI Priti Chat Trigger -->
+                    <button type="button" onclick="openChatModal(); playSound('click');" style="background: var(--accent-primary); color: #fff; border: none; border-radius: 20px; padding: 5px 12px; font-size: 10.5px; cursor: pointer; font-weight: 600;">💬 ASK AI PRITI</button>
+
                     <div class="zoom-toolbar">
                         <button class="zoom-btn" onclick="adjustZoom(-0.05); playSound('click');" title="Zoom Out">-</button>
                         <span class="zoom-label" id="zoomLevel">100%</span>
@@ -793,6 +893,57 @@
             }
         }
 
+        // Custom Theme Matching Alert Function
+        function showCustomAlert(title, message) {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertModal').classList.add('active');
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlertModal').classList.remove('active');
+        }
+
+        // Earth-Based Telemedicine Mode Toggle Function
+        let isEarthMode = false;
+        function toggleEarthMode() {
+            isEarthMode = !isEarthMode;
+            const btn = document.getElementById('btnEarthMode');
+            if (isEarthMode) {
+                btn.style.background = "var(--accent-secondary)";
+                btn.innerText = "🚀 SPACE MISSION MODE";
+                showCustomAlert(
+                    "🌍 Earth-Based Telemedicine Mode Activated!",
+                    "Downscaled Use-Case: The extremophile defense mechanisms (heat-shock proteins & antioxidant enzymes) are mapped to shelf-stable oral capsules, field-deployable telemedicine kits, and rural clinic ORS packets for high-altitude or remote terrestrial populations lacking direct medical access."
+                );
+            } else {
+                btn.style.background = "var(--success)";
+                btn.innerText = "🌍 EARTH TELEMEDICINE MODE";
+                showCustomAlert("Space Mission Mode", "🚀 Switched back to Deep Space Mission Mode (Mars/ISS/Lunar Orbit).");
+            }
+        }
+
+        // Public & Rural Patient Mode Toggle (Single clean execution)
+        let isPublicMode = false;
+        function togglePublicMode() {
+            isPublicMode = !isPublicMode;
+            const btn = document.getElementById('btnPublicMode');
+            if (isPublicMode) {
+                btn.style.background = "var(--success)";
+                btn.innerText = "🚀 ADVANCED SPACE MODE";
+                openChatModal();
+                showCustomAlert(
+                    "🧑‍⚕️ Public & Rural Patient Mode Activated!",
+                    "Simplified Use-Case: Complex orbital simulations and genetic charts are minimized. Everyday citizens in remote areas can directly interact with AI Priti in plain language for localized symptom checking and step-by-step first-aid guidance."
+                );
+            } else {
+                btn.style.background = "var(--accent-secondary)";
+                btn.innerText = "🧑‍⚕️ PUBLIC & RURAL MODE";
+                closeChatModal();
+                showCustomAlert("Advanced Mode", "🚀 Switched back to Advanced Research & Space Mission Mode.");
+            }
+        }
+
         Chart.defaults.devicePixelRatio = Math.max(window.devicePixelRatio || 1, 3.5);
         Chart.defaults.font.family = "'Calisto MT', serif";
 
@@ -841,6 +992,134 @@
             playSound('click');
         }
 
+        function openEmergencyModal() {
+            document.getElementById('emergencyModal').classList.add('active');
+            playSound('popup');
+        }
+
+        function closeEmergencyModal() {
+            document.getElementById('emergencyModal').classList.remove('active');
+            playSound('click');
+            stopEmergencyVoice();
+        }
+
+        function openChatModal() {
+            document.getElementById('chatModal').classList.add('active');
+            playSound('popup');
+        }
+
+        function closeChatModal() {
+            document.getElementById('chatModal').classList.remove('active');
+            playSound('click');
+        }
+
+        function checkDynamicEmergencyConditions() {
+            const bp = parseFloat(document.getElementById('vitalBP').value) || 120;
+            const sugar = parseFloat(document.getElementById('vitalSugar').value) || 95;
+            const sleep = parseFloat(document.getElementById('vitalSleep').value) || 7.5;
+
+            let alertTriggered = false;
+            let adviceText = "Vitals are nominal. Standing by for telemetry anomalies.";
+
+            if (bp > 140) {
+                alertTriggered = true;
+                adviceText = `Warning! High Systolic Blood Pressure detected (${bp} mmHg). Step 1: Rest immediately. Step 2: Administer Sublingual Vasodilator spray to rapidly relieve cardiovascular stress.`;
+            } else if (sugar > 180) {
+                alertTriggered = true;
+                adviceText = `Warning! Elevated Blood Sugar detected (${sugar} mg/dL). Step 1: Check insulin delivery system. Step 2: Hydrate with extremophile electrolyte formulation.`;
+            } else if (sleep < 4) {
+                alertTriggered = true;
+                adviceText = `Warning! Severe Sleep Deprivation detected (${sleep} hrs). Step 1: Initiate neuro-cognitive protection protocol. Step 2: Administer circadian stabilizing micro-dose.`;
+            }
+
+            const alertBtn = document.getElementById('btnEmergencyAlert');
+            const dynamicTextElem = document.getElementById('dynamicEmergencyText');
+            dynamicTextElem.innerText = adviceText;
+
+            if (alertTriggered) {
+                alertBtn.style.display = 'block';
+            } else {
+                alertBtn.style.display = 'none';
+            }
+        }
+
+        function speakEmergencyGuide() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const textToSpeak = document.getElementById('dynamicEmergencyText').innerText;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+                playSound('click');
+            } else {
+                alert("Speech synthesis not supported in this browser.");
+            }
+        }
+
+        function stopEmergencyVoice() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function formatPritiReply(text) {
+            const safe = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return safe
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        async function sendChatMessage() {
+            const inputField = document.getElementById('chatInput');
+            const userText = inputField.value.trim();
+            if (!userText) return;
+
+            const chatHistory = document.getElementById('chatHistory');
+
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.style.cssText = "background: rgba(123,79,133,0.15); padding: 6px 10px; border-radius: 6px; align-self: flex-end; max-width: 85%; color: var(--accent-primary); font-weight: 600;";
+            userMsgDiv.innerHTML = `<strong>You:</strong> ${formatPritiReply(userText)}`;
+            chatHistory.appendChild(userMsgDiv);
+
+            inputField.value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = "pritiLoading";
+            loadingDiv.style.cssText = "background: #e2dcd5; padding: 6px 10px; border-radius: 6px; align-self: flex-start; max-width: 85%; color: var(--text-dim); font-style: italic;";
+            loadingDiv.innerHTML = `<strong>Priti AI:</strong> Analyzing medical telemetry & searching database...`;
+            chatHistory.appendChild(loadingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const res = await fetch('/api/chat-priti', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: userText })
+                });
+                const data = await res.json();
+               
+                document.getElementById('pritiLoading').remove();
+
+                const aiResponse = data.reply || "Telemetry error. Please review your hud vitals.";
+
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.style.cssText = "background: #e2dcd5; padding: 6px 10px; border-radius: 6px; align-self: flex-start; max-width: 85%; color: var(--text-main);";
+                aiMsgDiv.innerHTML = `<strong>Priti AI:</strong> ${formatPritiReply(aiResponse)}`;
+                chatHistory.appendChild(aiMsgDiv);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            } catch (err) {
+                if (document.getElementById('pritiLoading')) document.getElementById('pritiLoading').remove();
+                const errDiv = document.createElement('div');
+                errDiv.style.cssText = "background: rgba(179,57,57,0.15); padding: 6px 10px; border-radius: 6px; align-self: flex-start; color: var(--danger);";
+                errDiv.innerHTML = `<strong>Priti AI:</strong> Network anomaly detected. Please check local server connection.`;
+                chatHistory.appendChild(errDiv);
+            }
+        }
+
         let currentScale = 1.0;
         const hudViewport = document.getElementById('hudViewport');
         const zoomLabel = document.getElementById('zoomLevel');
@@ -881,14 +1160,21 @@
         }
 
         async function runSimulation() {
+            const bpVal = parseFloat(document.getElementById('vitalBP').value) || 120;
+            const sugarVal = parseFloat(document.getElementById('vitalSugar').value) || 95;
+            const sleepVal = parseFloat(document.getElementById('vitalSleep').value) || 7.5;
+            const moodVal = parseFloat(document.getElementById('vitalMood').value) || 8;
+
+            checkDynamicEmergencyConditions();
+
             const payload = {
                 destination: currentDestination,
                 duration: parseInt(slider.value) || 180,
                 vital_signs: {
-                    bp_systolic: parseFloat(document.getElementById('vitalBP').value) || 120,
-                    blood_sugar: parseFloat(document.getElementById('vitalSugar').value) || 95,
-                    sleep_hours: parseFloat(document.getElementById('vitalSleep').value) || 7.5,
-                    mood_index: parseFloat(document.getElementById('vitalMood').value) || 8
+                    bp_systolic: bpVal,
+                    blood_sugar: sugarVal,
+                    sleep_hours: sleepVal,
+                    mood_index: moodVal
                 },
                 client_records: activeClientRecords
             };
@@ -936,7 +1222,7 @@
                
                 if (res.ok) {
                     status.style.color = 'var(--success)';
-                    status.innerHTML = `✓ <strong>${data.record.id}</strong> Ingested<br><span style="color:var(--accent-secondary);">[${data.mode}]</span>`;
+                    status.innerHTML = `✓ <strong>data.record.id</strong>Ingested<br><span style="color:var(--accent-secondary);">[{data.mode}]</span>`;
                    
                     if (!activeClientRecords.some(r => r.id === data.record.id)) {
                         activeClientRecords.push(data.record);
@@ -945,7 +1231,7 @@
                     input.value = '';
                     runSimulation();
                 } else {
-                    status.style.color = 'var(--danger)';
+                    status.style.danger = 'var(--danger)';
                     status.innerText = data.message || "Ingestion error.";
                 }
             } catch (err) {
@@ -1213,12 +1499,13 @@
         slider.addEventListener('input', function() {
             daysLabel.innerText = this.value;
             updateEnvDisplay();
-            
-            // Debounce logic: Prevents overloading the server while dragging the slider
+           
+            checkDynamicEmergencyConditions();
+
             if (simulationTimeout) clearTimeout(simulationTimeout);
             simulationTimeout = setTimeout(() => {
                 runSimulation();
-            }, 100); // 100 ms delay for a smooth slider experience
+            }, 100);
         });
 
         btnExecute.addEventListener('click', runSimulation);
