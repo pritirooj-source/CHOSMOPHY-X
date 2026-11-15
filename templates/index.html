@@ -450,40 +450,43 @@
             width: 100%;
         }
 
-        /* Chart container wrapper with horizontal scrollbar for mobile */
-        .chart-wrap {
+        /* Scrollable container for each chart box individually */
+        .chart-box {
             position: relative;
+            height: 240px;
             width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
 
-        .chart-wrap::-webkit-scrollbar {
+        .chart-box::-webkit-scrollbar {
             height: 8px;
         }
 
-        .chart-wrap::-webkit-scrollbar-thumb {
+        .chart-box::-webkit-scrollbar-track {
+            background: rgba(247, 244, 238, 0.4);
+            border-radius: 4px;
+        }
+
+        .chart-box::-webkit-scrollbar-thumb {
             background: rgba(123, 79, 133, 0.4);
             border-radius: 4px;
         }
 
-        .chart-box {
-            position: relative;
-            height: 240px;
-            min-width: 600px; /* Forces chart to expand horizontally so mobile users can scroll it */
-            width: 100%;
+        /* Forces internal canvas to expand so scrollbar activates on mobile */
+        .chart-box canvas {
+            min-width: 650px;
+            height: 220px !important;
         }
 
-        /* Dedicated table wrapper with independent horizontal scrolling */
+        /* Scrollable container for the table */
         .table-wrap {
             max-height: 280px;
             width: 100%;
             overflow-x: auto;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -505,7 +508,7 @@
 
         table {
             width: 100%;
-            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears */
+            min-width: 750px;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -543,12 +546,12 @@
             height: auto;
         }
 
-        .col-focus { width: 160px; }
-        .col-base { width: 80px; text-align: center; }
-        .col-sol { width: 190px; }
-        .col-org { width: 130px; }
-        .col-dg { width: 90px; text-align: center; }
-        .col-mit { width: 80px; text-align: center; }
+        .col-focus { width: 28%; }
+        .col-base { width: 12%; text-align: center; }
+        .col-sol { width: 32%; }
+        .col-org { width: 16%; }
+        .col-dg { width: 6%; text-align: center; }
+        .col-mit { width: 6%; text-align: center; }
 
         tr:hover td { background: rgba(123, 79, 133, 0.06); }
 
@@ -749,29 +752,25 @@
                     <div class="charts-row">
                         <div class="panel">
                             <div class="panel-title">
-                                <span>Risk Index (%) vs Organ Target</span>
+                                <span>Risk Index (%) vs Organ Target <span style="font-size: 8.5px; color: var(--text-dim); font-weight: normal;">(Swipe)</span></span>
                             </div>
-                            <div class="chart-wrap">
-                                <div class="chart-box">
-                                    <canvas id="riskChart"></canvas>
-                                </div>
+                            <div class="chart-box">
+                                <canvas id="riskChart"></canvas>
                             </div>
                         </div>
 
                         <div class="panel">
                             <div class="panel-title">
-                                <span>Baseline vs Mitigated Risk Profile</span>
+                                <span>Baseline vs Mitigated Risk Profile <span style="font-size: 8.5px; color: var(--text-dim); font-weight: normal;">(Swipe)</span></span>
                             </div>
-                            <div class="chart-wrap">
-                                <div class="chart-box">
-                                    <canvas id="trendChart"></canvas>
-                                </div>
+                            <div class="chart-box">
+                                <canvas id="trendChart"></canvas>
                             </div>
                         </div>
                     </div>
 
                     <div class="panel" style="margin-bottom: 0;">
-                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Swipe table left/right • Click row for Deep-Dive)</span></h2>
+                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Scroll list • Click row for Deep-Dive)</span></h2>
                         <div class="table-wrap">
                             <table>
                                 <thead>
