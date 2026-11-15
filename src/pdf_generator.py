@@ -4,7 +4,6 @@ Executive Clinical Mission Dossier Generator
 Includes End-to-End Biosynthetic & Nano-Medicine Delivery Protocol.
 """
 
-import datetime
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
@@ -12,7 +11,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 
 # Dashboard-matched Bi-color / Taupe Palette
-COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')    # Soft Cream / Off-White Background
+COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')     # Soft Cream / Off-White Background
 COLOR_CARD_BEIGE = colors.HexColor('#eae4de')   # Soft Taupe Panel Background
 COLOR_BORDER = colors.HexColor('#c5bac1')       # Subtle Lavender-Tinted Border
 COLOR_HEADER_BG = colors.HexColor('#e2dcd5')    # Header & Table Head Background
@@ -47,9 +46,6 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
 
     story = []
     styles = getSampleStyleSheet()
-
-    now = datetime.datetime.now()
-    exact_date_str = now.strftime("%d %b %Y | %H:%M:%S")
 
     total_rows = len(countermeasures)
 
@@ -95,11 +91,11 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
     cell_mitigated_risk = ParagraphStyle('CMR', fontName='Helvetica-Bold', fontSize=f_size, leading=f_lead, alignment=1, textColor=COLOR_RISK_SAFE)
     cell_center_style = ParagraphStyle('CC', fontName='Helvetica', fontSize=f_size - 0.2, leading=f_lead, alignment=1, textColor=COLOR_TEXT_DARK)
 
-    # 1. Header Section
+    # 1. Header Section (Removed verification text and left blank)
     header_data = [
         [
             Paragraph("<b>COSMOPHY-X: ASTRONAUT DOSSIER</b>", title_style),
-            Paragraph(f"ISSUED: <b>{exact_date_str}</b>", meta_style)
+            Paragraph("", meta_style)
         ]
     ]
 
