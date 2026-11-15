@@ -6,11 +6,13 @@ Includes End-to-End Biosynthetic & Nano-Medicine Delivery Protocol.
 
 import datetime
 from io import BytesIO
-from flask import request, send_file
+from flask import Flask, render_template, request, send_file
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
+
+# (তোমার app এবং destinations ডাটা এখানে থাকবে...)
 
 # Dashboard-matched Bi-color / Taupe Palette
 COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')     # Soft Cream / Off-White Background
@@ -229,19 +231,17 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures, ex
     buffer.seek(0)
     return buffer.getvalue()
 
-
-# Flask Route to Handle PDF Export with Client Local Time Support
-# @app.route('/api/export-pdf', methods=['POST'])
+@app.route('/api/export-pdf', methods=['POST'])
 def export_pdf():
     data = request.get_json()
     destination = data.get('destination', 'LEO_ISS')
     duration = data.get('duration', 180)
     
-    # Receive browser/client time sent from frontend, fallback to server time if unavailable
+    # Receive client local time from frontend request (falls back to server time if missing)
     client_time_str = data.get('current_time', datetime.datetime.now().strftime("%d %b %Y | %H:%M:%S"))
     
     dest_info = destinations.get(destination, {})
-    countermeasures = get_countermeasures(destination, duration) # Assumes this helper function exists in your app
+    countermeasures = get_countermeasures(destination, duration)
     
     pdf_bytes = generate_mission_pdf(destination, duration, dest_info, countermeasures, client_time_str)
     
