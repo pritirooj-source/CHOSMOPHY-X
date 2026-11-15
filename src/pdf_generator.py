@@ -6,13 +6,10 @@ Includes End-to-End Biosynthetic & Nano-Medicine Delivery Protocol.
 
 import datetime
 from io import BytesIO
-from flask import Flask, render_template, request, send_file
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-
-# (তোমার app এবং destinations ডাটা এখানে থাকবে...)
 
 # Dashboard-matched Bi-color / Taupe Palette
 COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')     # Soft Cream / Off-White Background
@@ -36,7 +33,7 @@ def draw_beige_background(canvas, doc):
     canvas.rect(16, 16, doc.pagesize[0] - 32, doc.pagesize[1] - 32, stroke=1, fill=0)
     canvas.restoreState()
 
-def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures, exact_date_str):
+def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
     buffer = BytesIO()
    
     doc = SimpleDocTemplate(
@@ -50,6 +47,10 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures, ex
 
     story = []
     styles = getSampleStyleSheet()
+
+    # Fixed and precise timestamp generation
+    now = datetime.datetime.now()
+    exact_date_str = now.strftime("%d %b %Y | %H:%M:%S")
 
     total_rows = len(countermeasures)
 
@@ -230,24 +231,3 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures, ex
     doc.build(story, onFirstPage=draw_beige_background)
     buffer.seek(0)
     return buffer.getvalue()
-
-@app.route('/api/export-pdf', methods=['POST'])
-def export_pdf():
-    data = request.get_json()
-    destination = data.get('destination', 'LEO_ISS')
-    duration = data.get('duration', 180)
-    
-    # Receive client local time from frontend request (falls back to server time if missing)
-    client_time_str = data.get('current_time', datetime.datetime.now().strftime("%d %b %Y | %H:%M:%S"))
-    
-    dest_info = destinations.get(destination, {})
-    countermeasures = get_countermeasures(destination, duration)
-    
-    pdf_bytes = generate_mission_pdf(destination, duration, dest_info, countermeasures, client_time_str)
-    
-    return send_file(
-        BytesIO(pdf_bytes),
-        mimetype='application/pdf',
-        as_attachment=True,
-        download_name=f"CosmoPhy_X_{destination}_{duration}d.pdf"
-    )
