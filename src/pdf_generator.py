@@ -12,7 +12,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 
 # Dashboard-matched Bi-color / Taupe Palette
-COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')    # Soft Cream / Off-White Background
+COLOR_CANVAS_BG = colors.HexColor('#f7f4ee')     # Soft Cream / Off-White Background
 COLOR_CARD_BEIGE = colors.HexColor('#eae4de')   # Soft Taupe Panel Background
 COLOR_BORDER = colors.HexColor('#c5bac1')       # Subtle Lavender-Tinted Border
 COLOR_HEADER_BG = colors.HexColor('#e2dcd5')    # Header & Table Head Background
@@ -48,6 +48,7 @@ def generate_mission_pdf(dest_key, duration_days, dest_info, countermeasures):
     story = []
     styles = getSampleStyleSheet()
 
+    # Fixed and precise timestamp generation
     now = datetime.datetime.now()
     exact_date_str = now.strftime("%d %b %Y | %H:%M:%S")
 
