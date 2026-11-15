@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CosmoPhy-X | Cosmic Physiology & Extremophile Defense</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Calisto+MT:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -23,13 +23,14 @@
 
         html, body {
             width: 100%;
-            height: 100%;
+            max-width: 100%;
             margin: 0;
             padding: 0;
             background: #f7f4ee !important;
             color: var(--text-main);
             font-family: 'Calisto MT', serif;
             font-weight: 400;
+            overflow-x: hidden;
             overflow-y: auto;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -40,8 +41,8 @@
         }
 
         html::-webkit-scrollbar, body::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
         }
 
         html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
@@ -57,32 +58,35 @@
         /* Main Container for Single-Page Scroll Layout */
         .page-container {
             max-width: 1450px;
+            width: 100%;
             margin: 0 auto;
-            padding: 16px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            min-width: 1280px; /* Ensures full desktop layout width on mobile */
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
-        /* Top Banner with the Uploaded Image (Full High-Resolution Quality & Wide View) */
+        /* Top Banner with the Uploaded Image (Full High-Resolution Quality) */
         .hero-banner {
             background: #eae4de;
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             box-shadow: 0 6px 25px rgba(54, 40, 59, 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .hero-img {
             width: 100%;
             height: auto;
             max-height: none;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8px;
             background: #f4eef5;
             box-shadow: 0 4px 15px rgba(54, 40, 59, 0.1);
@@ -113,6 +117,8 @@
             flex-shrink: 0;
             position: relative;
             z-index: 2;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .header-title-box h1 {
@@ -200,6 +206,8 @@
             gap: 10px;
             position: relative;
             z-index: 2;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .panel {
@@ -212,6 +220,8 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .panel::before {
@@ -429,12 +439,15 @@
             display: grid;
             grid-template-rows: auto auto;
             gap: 10px;
+            width: 100%;
+            min-width: 0;
         }
 
         .charts-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            width: 100%;
         }
 
         .chart-box {
@@ -443,10 +456,13 @@
             width: 100%;
         }
 
+        /* Dedicated table wrapper with independent horizontal scrolling */
         .table-wrap {
             max-height: 280px;
+            width: 100%;
             overflow-x: auto;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -468,7 +484,7 @@
 
         table {
             width: 100%;
-            min-width: 600px;
+            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears on phones */
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -506,12 +522,12 @@
             height: auto;
         }
 
-        .col-focus { width: 24%; }
-        .col-base { width: 10%; text-align: center; }
-        .col-sol { width: 28%; }
-        .col-org { width: 18%; }
-        .col-dg { width: 10%; text-align: center; }
-        .col-mit { width: 10%; text-align: center; }
+        .col-focus { width: 160px; }
+        .col-base { width: 80px; text-align: center; }
+        .col-sol { width: 190px; }
+        .col-org { width: 130px; }
+        .col-dg { width: 90px; text-align: center; }
+        .col-mit { width: 80px; text-align: center; }
 
         tr:hover td { background: rgba(123, 79, 133, 0.06); }
 
@@ -578,6 +594,12 @@
             padding: 2px 6px;
             line-height: 1;
             flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .charts-row { grid-template-columns: 1fr; }
+            .right-area { grid-template-rows: auto auto; }
         }
     </style>
 </head>
@@ -724,7 +746,7 @@
                     </div>
 
                     <div class="panel" style="margin-bottom: 0;">
-                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Scroll list for all organs • Click row for Deep-Dive)</span></h2>
+                        <h2 class="panel-title">Extremophile Bio-Countermeasure Formulation Registry <span style="font-size: 9.5px; color: var(--text-dim);">(Swipe table left/right • Click row for Deep-Dive)</span></h2>
                         <div class="table-wrap">
                             <table>
                                 <thead>
