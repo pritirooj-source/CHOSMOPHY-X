@@ -450,9 +450,30 @@
             width: 100%;
         }
 
+        /* Chart container wrapper with horizontal scrollbar for mobile */
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
+        }
+
+        .chart-wrap::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .chart-wrap::-webkit-scrollbar-thumb {
+            background: rgba(123, 79, 133, 0.4);
+            border-radius: 4px;
+        }
+
         .chart-box {
             position: relative;
             height: 240px;
+            min-width: 600px; /* Forces chart to expand horizontally so mobile users can scroll it */
             width: 100%;
         }
 
@@ -462,7 +483,7 @@
             width: 100%;
             overflow-x: auto;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -484,7 +505,7 @@
 
         table {
             width: 100%;
-            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears on phones */
+            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears */
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -730,8 +751,10 @@
                             <div class="panel-title">
                                 <span>Risk Index (%) vs Organ Target</span>
                             </div>
-                            <div class="chart-box">
-                                <canvas id="riskChart"></canvas>
+                            <div class="chart-wrap">
+                                <div class="chart-box">
+                                    <canvas id="riskChart"></canvas>
+                                </div>
                             </div>
                         </div>
 
@@ -739,8 +762,10 @@
                             <div class="panel-title">
                                 <span>Baseline vs Mitigated Risk Profile</span>
                             </div>
-                            <div class="chart-box">
-                                <canvas id="trendChart"></canvas>
+                            <div class="chart-wrap">
+                                <div class="chart-box">
+                                    <canvas id="trendChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
