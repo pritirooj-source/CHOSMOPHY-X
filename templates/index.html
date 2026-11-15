@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CosmoPhy-X | Cosmic Physiology & Extremophile Defense</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Calisto+MT:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -462,7 +462,7 @@
             width: 100%;
             overflow-x: auto;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
             scrollbar-width: thin;
             scrollbar-color: rgba(123, 79, 133, 0.4) rgba(247, 244, 238, 0.2);
         }
@@ -484,7 +484,7 @@
 
         table {
             width: 100%;
-            min-width: 700px;
+            min-width: 700px; /* Forces table content to have enough width so horizontal scrollbar appears on phones */
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -596,17 +596,10 @@
             flex-shrink: 0;
         }
 
-        /* Mobile Responsive Media Query */
-        @media (max-width: 1024px) {
-            .dashboard-grid { 
-                grid-template-columns: 1fr; 
-            }
-            .charts-row { 
-                grid-template-columns: 1fr; 
-            }
-            .right-area { 
-                grid-template-rows: auto auto; 
-            }
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .charts-row { grid-template-columns: 1fr; }
+            .right-area { grid-template-rows: auto auto; }
         }
     </style>
 </head>
