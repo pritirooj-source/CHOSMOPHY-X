@@ -1188,15 +1188,16 @@
         }
 
         let simulationTimeout = null;
+
         slider.addEventListener('input', function() {
             daysLabel.innerText = this.value;
             updateEnvDisplay();
             
-            // Debounce logic to keep the slider smooth on Render live deployment without overwhelming the server
+            // Debounce logic: Prevents overloading the server while dragging the slider
             if (simulationTimeout) clearTimeout(simulationTimeout);
             simulationTimeout = setTimeout(() => {
                 runSimulation();
-            }, 100);
+            }, 100); // 100 ms delay for a smooth slider experience
         });
 
         btnExecute.addEventListener('click', runSimulation);
