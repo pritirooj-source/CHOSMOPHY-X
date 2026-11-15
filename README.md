@@ -7,7 +7,7 @@
 
 Operating at the intersection of astrobiology and bioinformatics, CosmoPhy-X integrates real-time telemetry, NASA Open Science Data Repository (OSDR) multi-omics datasets, and biophysical modeling. It maps extreme-environment extremophile defense mechanisms—such as radiotolerant proteins from extremophiles and thermophilic enzymes—to human physiological vulnerabilities across 16 celestial bodies and transit corridors in the solar system.
 
----.
+---
 
 ## Key Features & Architecture
 
@@ -50,13 +50,3 @@ CosmoPhy-X/
 │
 └── templates/
     └── index.html          # Single-page interactive HUD dashboard interface
-
-## Installation & Local Execution Guide
-
-1. **Clone or Download the Repository**  
-   Ensure all project files are placed in your working directory matching the directory structure outlined above.
-
-2. **Install Dependencies**  
-   Open your terminal in the project root folder and install the required Python packages:
-   ```bash
-   pip install flask reportlab requests python-dotenv
